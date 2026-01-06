@@ -144,7 +144,7 @@ jobs:
           branch-id: ${{ inputs.branch-id }}
           deployment-id: ${{ matrix.deployment-id }}
           deployment-folder: deployment
-          deployment-info: '{"stage":"production"}'  # ← ADD THIS LINE TO FIX THE ERROR
+          deployment-info: '{"stage":"production"}'
           ssh-user: ${{ secrets[env.SSH_USERNAME_SECRET] }}
           ssh-key: ${{ secrets.IONOS_SSH_KEY }}
 
