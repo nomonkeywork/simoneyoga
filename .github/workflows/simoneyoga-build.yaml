@@ -66,6 +66,22 @@ jobs:
             composer update --optimize-autoloader --no-dev --no-interaction --with-all-dependencies --ignore-platform-req=php
           fi
 
+      - name: Prepare .env file
+        run: |
+          # Create .env file from .env.example if it doesn't exist
+          if [ ! -f .env ]; then
+            if [ -f .env.example ]; then
+              cp .env.example .env
+            else
+              # Create minimal .env file if .env.example doesn't exist
+              echo "APP_NAME=Laravel" > .env
+              echo "APP_ENV=production" >> .env
+              echo "APP_KEY=" >> .env
+              echo "APP_DEBUG=false" >> .env
+              echo "APP_URL=https://simoneyoga.de" >> .env
+            fi
+          fi
+
       - name: Build PHP assets
 # uncomment the following lines if you want to add environment variables for this step
 #        env:
