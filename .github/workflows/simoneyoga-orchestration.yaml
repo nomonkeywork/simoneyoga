@@ -2,6 +2,7 @@
 # Build steps can be customized in the simoneyoga-build.yaml.
 # More information under https://docs.ionos.space/docs/github-actions-customization/
 # version: 2022-07-21
+# Updated: 2025-01-06 - Added permissions for workflow dispatch
 
 name: "Deploy Now: Orchestration"
 run-name: "Deploy Now: Build simoneyoga · ${{ github.event.head_commit.message || format('Triggered by {0}', github.triggering_actor) }}"
