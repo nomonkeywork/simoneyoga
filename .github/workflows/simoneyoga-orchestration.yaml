@@ -52,9 +52,16 @@ jobs:
     steps:
       - name: Dispatch deployment(s)
         uses: ionos-deploy-now/project-action@v1
+        id: dispatch
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-eu.ionos.space
           project-id: 992c602c-dc50-471b-b840-90b04674003b
           branch-id: ${{ needs.retrieve-project.outputs.branch-id }}
           action: dispatch-deployments
+      
+      - name: Debug dispatch output
+        run: |
+          echo "Dispatch action completed"
+          echo "Outputs:"
+          echo "${{ toJson(steps.dispatch.outputs) }}"
