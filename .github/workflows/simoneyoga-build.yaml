@@ -119,5 +119,5 @@ jobs:
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
           folder: deployment
-          config-file: .deploy-now/simoneyoga/config.yaml
+          config-file: .deploy-now/config.yaml
           action: upload
