@@ -14,100 +14,50 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: ./deployment
+  DEPLOYMENT_FOLDER: ./
 
 jobs:
 # Please do not rename this job
   build-project:
     name: build simoneyoga
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # if you add permissions here this needs to be done in the simoneyoga-orchestration.yaml as well
     steps:
       - name: checkout
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
-      - name: Setup PHP
+      - name: Render templates
+        uses: ionos-deploy-now/template-renderer-action@v2
+        id: template
+        with:
+          input-directory: .deploy-now/simoneyoga
+          output-directory: ${{ env.DEPLOYMENT_FOLDER }}
+          intermediate-data-file: ${{ env.DEPLOYMENT_FOLDER }}/.template-renderer-data
+
+      - name: Setup composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, bcmath, pdo, pdo_mysql
-          coverage: none
+          tools: composer:2
 
-      - name: Prepare directories
-        run: |
-          # Create required directories with correct permissions
-          mkdir -p bootstrap/cache
-          mkdir -p storage/logs
-          mkdir -p storage/framework/cache
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          chmod -R 775 bootstrap/cache storage
-          
-      - name: Update Composer dependencies for PHP 8.2
-        run: |
-          # Remove composer.lock if it contains PHP 8.4+ dependencies
-          # This forces composer to regenerate it with PHP 8.2-compatible versions
-          if grep -q "symfony/css-selector.*v8.0.0" composer.lock 2>/dev/null; then
-            echo "Removing composer.lock to regenerate with PHP 8.2-compatible versions"
-            rm -f composer.lock
-          fi
-          
-      - name: Install Composer dependencies
-        run: |
-          # Install/update dependencies - will regenerate lock file if missing
-          # Use --with-all-dependencies to update transitive dependencies
-          # Ignore platform requirements to allow PHP 8.2-compatible versions
-          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php
+      - name: Run composer install
+# uncomment the following lines if you want to add environment variables for this step
+#        env:
+#          MY_ENV_VAR: value-for-my-env-var
+#          MY_SECRET_ENV_VAR: ${{ secrets.MY_SECRET }} # here you can find information how to create secrets: https://docs.github.com/en/actions/security-guides/encrypted-secrets
+        run: composer install --optimize-autoloader --no-dev
 
-      - name: Prepare Laravel for production
-        env:
-          APP_ENV: production
-          APP_URL: ${{ inputs.site-url != 'https://IONOS_DEPLOY_NOW_SITE_URL' && inputs.site-url || 'https://simoneyoga.de' }}
-        run: |
-          # Generate application key if not set (will be overridden by .env.template)
-          php artisan key:generate --force || true
-          
-          # Optimize Laravel for production
-          php artisan config:cache || true
-          php artisan route:cache || true
-          php artisan view:cache || true
-          
-          # Ensure storage directories exist with correct permissions
-          mkdir -p storage/logs
-          mkdir -p storage/framework/cache
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          mkdir -p bootstrap/cache
-          
-          # Set permissions
-          chmod -R 775 storage bootstrap/cache || true
-
-      - name: Prepare deployment folder
-        run: |
-          # Create deployment folder structure
-          mkdir -p deployment
-          
-          # Copy all files to deployment folder (excluding dev files)
-          rsync -av --exclude='.git' \
-            --exclude='.github' \
-            --exclude='node_modules' \
-            --exclude='tests' \
-            --exclude='frontend' \
-            --exclude='backend' \
-            --exclude='deploy' \
-            . deployment/
-          
-          # Ensure deployment-info.json exists with correct schema
-          cat > deployment/deployment-info.json << 'EOF'
-          {
-            "version": 2,
-            "type": "php",
-            "build": {
-              "distFolder": "."
-            }
-          }
-          EOF
+      - name: Build PHP assets
+# uncomment the following lines if you want to add environment variables for this step
+#        env:
+#          MY_ENV_VAR: value-for-my-env-var
+#          MY_SECRET_ENV_VAR: ${{ secrets.MY_SECRET }} # here you can find information how to create secrets: https://docs.github.com/en/actions/security-guides/encrypted-secrets
+        run: php artisan key:generate --force -n
 
 # Please do not touch the following action
       - name: Store deployment content
@@ -115,9 +65,9 @@ jobs:
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-eu.ionos.space
-          project-id: 992c602c-dc50-471b-b840-90b04674003b
+          project-id: 09177b38-b028-44bd-aca1-2f3bc8772559
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
-          folder: deployment
-          config-file: .deploy-now/config.yaml
+          folder: ${{ env.DEPLOYMENT_FOLDER }}
+          config-file: .deploy-now/simoneyoga/config.yaml
           action: upload
