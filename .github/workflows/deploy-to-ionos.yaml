@@ -94,7 +94,7 @@ jobs:
           project-id: ${{ inputs.project-id }}
           branch-id: ${{ inputs.branch-id }}
           deployment-id: ${{ matrix.deployment-id }}
-          deployment-info: ${{ steps.deployment.outputs.info }}
+          deployment-folder: deployment
           ssh-user: ${{ secrets[env.SSH_USERNAME_SECRET] }}
           ssh-key: ${{ secrets.IONOS_SSH_KEY }}
 

@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "type": "php",
+  "build": {
+    "distFolder": "."
+  }
+}
+
