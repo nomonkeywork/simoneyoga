@@ -46,15 +46,19 @@ jobs:
           
       - name: Update Composer dependencies for PHP 8.2
         run: |
-          # First, update composer.lock to be compatible with PHP 8.2
-          # Use --with-all-dependencies to update transitive dependencies
-          # Ignore platform requirements to allow downgrading to PHP 8.2-compatible versions
-          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php || true
+          # Remove composer.lock if it contains PHP 8.4+ dependencies
+          # This forces composer to regenerate it with PHP 8.2-compatible versions
+          if grep -q "symfony/css-selector.*v8.0.0" composer.lock 2>/dev/null; then
+            echo "Removing composer.lock to regenerate with PHP 8.2-compatible versions"
+            rm -f composer.lock
+          fi
           
       - name: Install Composer dependencies
         run: |
-          # Install from updated lock file (or original if update failed)
-          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-req=php
+          # Install/update dependencies - will regenerate lock file if missing
+          # Use --with-all-dependencies to update transitive dependencies
+          # Ignore platform requirements to allow PHP 8.2-compatible versions
+          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php
 
       - name: Prepare Laravel for production
         env:
