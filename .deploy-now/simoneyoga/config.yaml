@@ -22,8 +22,8 @@ deploy:
       - Dockerfile-php-build
       - .template-renderer-data
       # Documentation and config files not needed on server
-      - README*.md
-      - *.md
+      - "README*.md"
+      - "*.md"
       - .editorconfig
       - .phpunit.result.cache
       - phpunit.xml
@@ -38,23 +38,23 @@ deploy:
       - .idea
       - .vscode
       - .DS_Store
-      - *.swp
-      - *.swo
-      - *~
+      - "*.swp"
+      - "*.swo"
+      - "*~"
       # Large documentation and troubleshooting files
-      - DEPLOYMENT-*.md
-      - FIX-*.md
-      - MANUAL-*.md
-      - GITHUB-*.md
-      - TOKEN-*.md
-      - CREATE-*.md
-      - TROUBLESHOOT-*.md
-      - RESTART-*.md
-      - STARTER-*.md
+      - "DEPLOYMENT-*.md"
+      - "FIX-*.md"
+      - "MANUAL-*.md"
+      - "GITHUB-*.md"
+      - "TOKEN-*.md"
+      - "CREATE-*.md"
+      - "TROUBLESHOOT-*.md"
+      - "RESTART-*.md"
+      - "STARTER-*.md"
       - NEXT-STEPS.md
-      - WORKFLOW-*.md
-      - IONOS-*.md
-      - README-*.md
+      - "WORKFLOW-*.md"
+      - "IONOS-*.md"
+      - "README-*.md"
     # commands that are executed at the real webspace NOT at build servers AFTER copying new files
     post-deployment-remote-commands:
       - find $(pwd) -type f -not -path "$(pwd)/logs/*" -exec chmod 664 {} \;
@@ -91,8 +91,8 @@ deploy:
       - .env
       - bootstrap/cache
       # Documentation and config files not needed on server
-      - README*.md
-      - *.md
+      - "README*.md"
+      - "*.md"
       - .editorconfig
       - .phpunit.result.cache
       - phpunit.xml
@@ -106,9 +106,9 @@ deploy:
       - .idea
       - .vscode
       - .DS_Store
-      - *.swp
-      - *.swo
-      - *~
+      - "*.swp"
+      - "*.swo"
+      - "*~"
     # commands that are executed at the real webspace NOT at build servers BEFORE copying new files
     pre-deployment-remote-commands:
       - php8.2-cli artisan down || php8.1-cli artisan down || true
