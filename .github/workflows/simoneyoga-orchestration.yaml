@@ -2,7 +2,6 @@
 # Build steps can be customized in the simoneyoga-build.yaml.
 # More information under https://docs.ionos.space/docs/github-actions-customization/
 # version: 2022-07-21
-# Updated: 2025-01-06 - Added permissions for workflow dispatch
 
 name: "Deploy Now: Orchestration"
 run-name: "Deploy Now: Build simoneyoga · ${{ github.event.head_commit.message || format('Triggered by {0}', github.triggering_actor) }}"
@@ -25,13 +24,16 @@ jobs:
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-eu.ionos.space
-          project-id: 992c602c-dc50-471b-b840-90b04674003b
+          project-id: 09177b38-b028-44bd-aca1-2f3bc8772559
           action: retrieve-info
 
 
   build:
     name: build
     needs: retrieve-project
+    permissions:
+      contents: read
+      packages: write
     if: ${{ needs.retrieve-project.outputs.deployment-enabled == 'true' }}
     uses: ./.github/workflows/simoneyoga-build.yaml
     with:
@@ -44,24 +46,13 @@ jobs:
     needs:
       - retrieve-project
       - build
-    if: ${{ needs.build.result == 'success' && needs.retrieve-project.outputs.deployment-enabled == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
     steps:
       - name: Dispatch deployment(s)
         uses: ionos-deploy-now/project-action@v1
-        id: dispatch
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-eu.ionos.space
-          project-id: 992c602c-dc50-471b-b840-90b04674003b
+          project-id: 09177b38-b028-44bd-aca1-2f3bc8772559
           branch-id: ${{ needs.retrieve-project.outputs.branch-id }}
           action: dispatch-deployments
-      
-      - name: Debug dispatch output
-        run: |
-          echo "Dispatch action completed"
-          echo "Outputs:"
-          echo "${{ toJson(steps.dispatch.outputs) }}"
