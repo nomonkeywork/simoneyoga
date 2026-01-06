@@ -49,8 +49,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.version }}
+          ref: main
           fetch-depth: 0
+      
+      - name: Checkout specific commit
+        run: |
+          git fetch origin ${{ inputs.version }} || git fetch origin main
+          git checkout ${{ inputs.version }} || git checkout main
 
       - name: Retrieve stored deployment
         uses: ionos-deploy-now/artifact-action@v1
