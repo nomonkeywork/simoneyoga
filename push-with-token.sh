@@ -19,3 +19,4 @@ EOF
 echo ""
 echo "✅ Push abgeschlossen!"
 
+

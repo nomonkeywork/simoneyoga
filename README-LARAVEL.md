@@ -201,3 +201,4 @@ Stelle sicher, dass `storage/` und `bootstrap/cache/` schreibbar sind:
 chmod -R 775 storage bootstrap/cache
 ```
 
+

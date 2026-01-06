@@ -59,3 +59,4 @@ ls backend/.use-mock && echo "Mock-Modus aktiv" || echo "Echte DB wird versucht"
 curl "http://localhost:8001/api/pages.php?slug=home"
 ```
 
+

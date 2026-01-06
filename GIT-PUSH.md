@@ -66,3 +66,4 @@ git push -u origin main
 
 Nach dem Push und nach dem Einrichten der Secrets wird bei jedem weiteren Push zu `main` automatisch zu IONOS deployed.
 
+

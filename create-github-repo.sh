@@ -28,3 +28,4 @@ echo "   https://github.com/settings/tokens"
 echo "   → Generate new token (classic)"
 echo "   → Scopes: 'repo' auswählen"
 
+

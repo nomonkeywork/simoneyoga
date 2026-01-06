@@ -210,3 +210,4 @@ npm run build
 4. ✅ Ersten Push machen und Deployment testen
 5. ✅ Website auf simoneyoga.de prüfen
 
+

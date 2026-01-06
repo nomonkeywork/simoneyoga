@@ -52,3 +52,4 @@ Das aktuelle Token (`github_pat_11BMJ233I0VtycwIHjuCE6_HI3oP0r007tgGjY9H3gLeIwNn
 - ❌ Token: Fehlt "repo" Scope
 - ⏳ Push: Wartet auf neues Token
 
+

@@ -24,3 +24,4 @@ echo ""
 echo "✅ Push abgeschlossen!"
 echo "   Repository: https://github.com/nomonkeywork/simoneyoga"
 
+

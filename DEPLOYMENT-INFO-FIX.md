@@ -68,3 +68,4 @@ Die `deployment-info.json` muss `"version": 2` enthalten, damit `deploy-to-ionos
 
 Die deployment-info sollte jetzt automatisch `"version": 2` enthalten, da beide Config-Dateien korrekt konfiguriert sind.
 
+

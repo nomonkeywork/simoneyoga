@@ -73,3 +73,4 @@ mv mock-pages.php pages.php
 - Prüfe `USE_MOCK_API` Environment Variable
 - Prüfe PHP Error Logs für Datenbankfehler
 
+

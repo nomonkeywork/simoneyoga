@@ -153,3 +153,4 @@ recurring:
 - Prüfe Post-Deployment Commands in `config.yaml`
 - Führe manuell aus: `php artisan config:clear`
 
+

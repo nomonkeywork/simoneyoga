@@ -95,3 +95,4 @@ sftp -P 22 u105266880@access877587871.webspace-data.io
 3. ⏳ Ersten Push machen
 4. ⏳ Deployment testen
 
+

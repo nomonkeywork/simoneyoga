@@ -50,3 +50,4 @@ Falls "Write access" Fehler weiterhin auftritt:
    - Scopes: ✅ **repo** (vollständiger Zugriff)
    - Token kopieren und in Remote URL verwenden
 
+
