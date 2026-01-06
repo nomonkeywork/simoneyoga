@@ -1,0 +1,13 @@
+# IONOS Deploy Now Configuration
+# This file tells IONOS Deploy Now how to build and deploy your project
+
+build:
+  type: npm
+  buildCommand: npm run build
+  buildDirectory: frontend
+  outputDirectory: frontend/dist
+
+deploy:
+  type: sftp
+  target: /htdocs/
+

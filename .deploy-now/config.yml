@@ -1,0 +1,12 @@
+# IONOS Deploy Now Configuration
+# https://www.ionos.com/help/hosting/deploy-now/
+
+build:
+  type: npm
+  buildCommand: npm run build
+  buildDirectory: frontend
+  outputDirectory: frontend/dist
+
+deploy:
+  type: sftp
+  target: /htdocs/
