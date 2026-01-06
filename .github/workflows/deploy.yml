@@ -1,8 +1,13 @@
 name: Deploy to IONOS
 
+# DISABLED: This workflow is for the old React+PHP setup
+# We now use Laravel with IONOS Deploy Now (simoneyoga-orchestration.yaml)
+# To re-enable, remove the 'on:' section below and uncomment the original triggers
+
 on:
-  push:
-    branches: [ main, master ]
+  workflow_dispatch:  # Only manual trigger, not automatic on push
+  # push:
+  #   branches: [ main, master ]
 
 jobs:
   deploy:
