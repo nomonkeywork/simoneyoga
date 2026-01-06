@@ -4,13 +4,13 @@ name: Deploy to IONOS
 # See .github/workflows/simoneyoga-orchestration.yaml
 # This workflow is kept for reference only (old React+PHP architecture)
 # 
-# To fully remove: Delete this file or uncomment the 'on:' section below
-# To re-enable: Uncomment the 'on:' section and restore original triggers
+# To fully remove: Delete this file
+# To re-enable: Uncomment the push triggers below
 
-# on:
-#   workflow_dispatch:  # Fully disabled - no triggers
-#   # push:
-#   #   branches: [ main, master ]
+on:
+  workflow_dispatch:  # Kept for YAML validity, but workflow is disabled
+  # push:
+  #   branches: [ main, master ]
 
 jobs:
   deploy:
