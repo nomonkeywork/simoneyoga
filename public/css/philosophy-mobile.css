@@ -1,0 +1,65 @@
+/* ========== PHILOSOPHY MOBILE VERSION ========== */
+
+@media (max-width: 767px) {
+    canvas, .header, .philosophy-right, .photo-zoom-container {
+        height: 100dvh;
+    }
+
+    .philosophy {
+        display: block;
+        min-height: auto;
+        position: relative;
+    }
+
+    .philosophy-left {
+        position: relative;
+        width: 100vw;
+        z-index: 2;  /* Sous les photos */
+        padding: 0 30px 0 100px;
+        border: 0px solid red;
+        /* Dégradé pour transition visuelle */
+        
+    }
+
+    .text-block {
+        border: 0px solid blue;
+    }
+
+    .philosophy-right {
+        position: absolute;  /* ✅ Absolute pour rester au-dessus */
+        top: 0;
+        left: 0;
+        width: 100vw;   /* ✅ Pleine largeur */
+        height: 50vh;   /* ✅ 50vh de hauteur */
+        z-index: 1;    /* ✅ Au-dessus des textes */
+        
+    }
+
+    .photo-zoom-container {
+        width: 100%;
+        height: 50vh;
+        top: 0;
+        left: 0;
+    }
+
+    /* Les photos gardent le clip-path inset avec coins arrondis */
+    .zoom-photo {
+        clip-path: circle(0% at center);
+        border-radius: 0;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+
+    /* Textes un peu plus grands sur mobile */
+    .text-block p {
+        font-size: 3.5vh;
+        line-height: 1.1;
+        padding-right: 25px;
+        
+    }
+
+    /* Premier text-block avec du padding-top pour ne pas être caché */
+    .text-block:first-child {
+       /*  padding-top: 60vh; */  /* 50vh des photos + 10vh de marge */
+    }
+}

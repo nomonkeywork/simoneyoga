@@ -27,54 +27,102 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          php-version: '8.1'
+          extensions: mbstring, xml, bcmath, pdo, pdo_mysql
+          coverage: none
 
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
+      - name: Install Composer dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-      - name: Build React app
-        working-directory: frontend
-        run: npm run build
+      - name: Prepare Laravel for production
+        run: |
+          # Copy .env.example to .env if .env doesn't exist
+          if [ ! -f .env ]; then
+            cp .env.example .env
+          fi
+          
+          # Generate application key if not set
+          php artisan key:generate --force || true
+          
+          # Clear and cache configuration
+          php artisan config:clear || true
+          php artisan cache:clear || true
+          php artisan view:clear || true
+          php artisan route:clear || true
 
       - name: Prepare deploy folder
         run: |
-          # Clean deploy folder (keep index.php and .htaccess if they exist)
-          rm -rf deploy/assets deploy/api deploy/config
-          mkdir -p deploy/assets deploy/api deploy/config
+          # Clean deploy folder
+          rm -rf deploy/*
+          mkdir -p deploy
           
-          # Copy React build
-          cp -r frontend/dist/* deploy/assets/
+          # Copy Laravel files (excluding development files)
+          rsync -av --exclude='.git' \
+            --exclude='.env.example' \
+            --exclude='composer.json' \
+            --exclude='composer.lock' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='phpunit.xml' \
+            --exclude='.phpunit.result.cache' \
+            --exclude='storage/logs/*' \
+            --exclude='storage/framework/cache/*' \
+            --exclude='storage/framework/sessions/*' \
+            --exclude='storage/framework/views/*' \
+            --exclude='frontend' \
+            --exclude='backend' \
+            . deploy/
           
-          # Copy PHP backend (only production files)
-          cp -r backend/api/*.php deploy/api/
-          cp -r backend/config/*.php deploy/config/
-          cp backend/.htaccess deploy/api/.htaccess 2>/dev/null || true
+          # Ensure storage and bootstrap/cache directories exist
+          mkdir -p deploy/storage/logs
+          mkdir -p deploy/storage/framework/cache
+          mkdir -p deploy/storage/framework/sessions
+          mkdir -p deploy/storage/framework/views
+          mkdir -p deploy/bootstrap/cache
           
-          # Ensure index.php exists
-          if [ ! -f deploy/index.php ]; then
-            echo "<?php readfile(__DIR__ . '/assets/index.html');" > deploy/index.php
-          fi
+          # Set permissions (will be adjusted on server)
+          chmod -R 775 deploy/storage deploy/bootstrap/cache || true
           
-          # Ensure .htaccess exists
-          if [ ! -f deploy/.htaccess ]; then
-            cat > deploy/.htaccess << 'EOF'
-          RewriteEngine On
-          SetEnv DB_HOST db5019339232.hosting-data.io
-          SetEnv DB_NAME simoneyoga26
-          SetEnv DB_USER dbu529946
-          SetEnv DB_PASS TivedenYoga_Retreat_2026
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteCond %{REQUEST_FILENAME} !-d
-          RewriteCond %{REQUEST_URI} !^/api/
-          RewriteRule ^ index.php [L]
+          # Ensure .htaccess exists for Laravel
+          if [ ! -f deploy/public/.htaccess ]; then
+            cat > deploy/public/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+              <IfModule mod_negotiation.c>
+                  Options -MultiViews -Indexes
+              </IfModule>
+
+              RewriteEngine On
+
+              # Handle Authorization Header
+              RewriteCond %{HTTP:Authorization} .
+              RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+              # Redirect Trailing Slashes If Not A Folder...
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_URI} (.+)/$
+              RewriteRule ^ %1 [L,R=301]
+
+              # Send Requests To Front Controller...
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteRule ^ index.php [L]
+          </IfModule>
           EOF
           fi
+          
+          # Create root .htaccess to redirect to public
+          cat > deploy/.htaccess << 'EOF'
+          <IfModule mod_rewrite.c>
+              RewriteEngine On
+              RewriteRule ^(.*)$ public/$1 [L]
+          </IfModule>
+          EOF
 
 # Please do not touch the following action
       - name: Store deployment content

@@ -1,10 +1,37 @@
-# IONOS Deploy Now Configuration for simoneyoga
-# This file tells IONOS Deploy Now how to deploy the built project
+# IONOS Deploy Now Configuration for Laravel
+# https://docs.ionos.space/docs/deploy-php-apps/
 
 deploy:
   type: sftp
   target: /htdocs/
 
-# The build output is already in ./deploy folder
-# This folder will be uploaded to /htdocs/ on IONOS
+# Laravel specific configuration
+# The build process will:
+# 1. Install Composer dependencies
+# 2. Run Laravel optimizations
+# 3. Copy files to deploy folder
+# 4. Deploy to /htdocs/
 
+# Exclude development files from deployment
+exclude:
+  - .git
+  - .gitignore
+  - .env.example
+  - composer.json
+  - composer.lock
+  - package.json
+  - package-lock.json
+  - node_modules
+  - tests
+  - phpunit.xml
+  - .phpunit.result.cache
+  - storage/logs/*
+  - storage/framework/cache/*
+  - storage/framework/sessions/*
+  - storage/framework/views/*
+
+# Keep these files persistent (not overwritten on deployment)
+persistent:
+  - storage/app/*
+  - storage/logs/*
+  - .env

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 51 46">
+  <!-- Generator: Adobe Illustrator 29.8.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 2)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: none;
+      }
+
+      .st1 {
+        fill: #416a61;
+      }
+
+      .st2 {
+        fill: #b1fcff;
+      }
+
+      .st3 {
+        fill: #ffe8d6;
+      }
+
+      .st4 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="st0" width="51" height="46"/>
+    </clipPath>
+  </defs>
+  <g id="Groupe_60">
+    <g id="Groupe_34">
+      <g id="Groupe_33">
+        <g class="st4">
+          <g id="Groupe_32">
+            <path id="Tracé_75" class="st3" d="M46,45.9h0c-2.8,0-5-2.2-5-5h0V14.1c0-2.8,2.2-5,5-5s5,2.2,5,5v26.8c0,2.8-2.2,5-5,5h0"/>
+            <path id="Tracé_76" class="st1" d="M5,45.9h0C2.2,45.9,0,43.7,0,40.9V14.1c0-2.8,2.2-5,5-5s5,2.2,5,5v26.8c0,2.8-2.2,5-5,5"/>
+            <path id="Tracé_77" class="st3" d="M28.4,37.6h0c-2,2-5.1,2-7.1,0,0,0,0,0,0,0L1.5,17.7c-2-2-2-5.1,0-7.1,2-2,5.1-2,7.1,0h0l19.9,19.9c2,2,2,5.1,0,7.1,0,0,0,0,0,0"/>
+            <path id="Tracé_78" class="st1" d="M49.5,44.5h0c-2,2-5.1,2-7.1,0h0s-20.5-20.5-20.5-20.5c-2-2-2-5.1,0-7.1h0c2-2,5.1-2,7.1,0,0,0,0,0,0,0l20.5,20.5c2,2,2,5.1,0,7.1h0"/>
+            <path id="Tracé_79" class="st2" d="M30.6,4.6c0,2.5-2,4.6-4.6,4.6-2.5,0-4.6-2-4.6-4.6S23.5,0,26.1,0c2.5,0,4.6,2,4.6,4.6h0"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
