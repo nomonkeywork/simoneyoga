@@ -15,6 +15,7 @@ deploy:
       - backend
       - deploy
       - access.log.current
+      - images
       - DOCKER_ENV
       - docker_tag
       - output.log
@@ -80,6 +81,7 @@ deploy:
       - backend
       - deploy
       - access.log.current
+      - images
       - DOCKER_ENV
       - docker_tag
       - output.log
