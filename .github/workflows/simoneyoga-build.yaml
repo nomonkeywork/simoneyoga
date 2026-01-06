@@ -47,7 +47,8 @@ jobs:
       - name: Install Composer dependencies
         run: |
           # Update composer.lock to be compatible with PHP 8.2
-          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --lock
+          # Use --with-all-dependencies to update transitive dependencies
+          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies
           # Then install from updated lock file
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
