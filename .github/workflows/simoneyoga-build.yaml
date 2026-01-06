@@ -27,11 +27,54 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Run script
-        env:
-          FTP_PASSWORD: Pirol_721
-          FTP_USER: u105266880
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build React app
+        working-directory: frontend
         run: npm run build
+
+      - name: Prepare deploy folder
+        run: |
+          # Clean deploy folder (keep index.php and .htaccess if they exist)
+          rm -rf deploy/assets deploy/api deploy/config
+          mkdir -p deploy/assets deploy/api deploy/config
+          
+          # Copy React build
+          cp -r frontend/dist/* deploy/assets/
+          
+          # Copy PHP backend (only production files)
+          cp -r backend/api/*.php deploy/api/
+          cp -r backend/config/*.php deploy/config/
+          cp backend/.htaccess deploy/api/.htaccess 2>/dev/null || true
+          
+          # Ensure index.php exists
+          if [ ! -f deploy/index.php ]; then
+            echo "<?php readfile(__DIR__ . '/assets/index.html');" > deploy/index.php
+          fi
+          
+          # Ensure .htaccess exists
+          if [ ! -f deploy/.htaccess ]; then
+            cat > deploy/.htaccess << 'EOF'
+          RewriteEngine On
+          SetEnv DB_HOST db5019339232.hosting-data.io
+          SetEnv DB_NAME simoneyoga26
+          SetEnv DB_USER dbu529946
+          SetEnv DB_PASS TivedenYoga_Retreat_2026
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteCond %{REQUEST_URI} !^/api/
+          RewriteRule ^ index.php [L]
+          EOF
+          fi
 
 # Please do not touch the following action
       - name: Store deployment content

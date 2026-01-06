@@ -1,0 +1,10 @@
+# IONOS Deploy Now Configuration for simoneyoga
+# This file tells IONOS Deploy Now how to deploy the built project
+
+deploy:
+  type: sftp
+  target: /htdocs/
+
+# The build output is already in ./deploy folder
+# This folder will be uploaded to /htdocs/ on IONOS
+
