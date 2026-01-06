@@ -1,37 +1,63 @@
 # IONOS Deploy Now Configuration for Laravel
-# https://docs.ionos.space/docs/deploy-php-apps/
+# https://docs.ionos.space/docs/deployment-configuration/
 
-deploy:
-  type: sftp
-  target: /htdocs/
+# Excludes - Files that should not be deployed
+bootstrap:
+  # Directories that are not copied by the initial deployment
+  excludes:
+    - .git
+    - .github
+    - .gitignore
+    - .env.example
+    - composer.json
+    - composer.lock
+    - package.json
+    - package-lock.json
+    - node_modules
+    - tests
+    - phpunit.xml
+    - .phpunit.result.cache
+    - frontend
+    - backend
+    - deploy
+    - README*.md
+    - *.md
+    - access.log.current
 
-# Laravel specific configuration
-# The build process will:
-# 1. Install Composer dependencies
-# 2. Run Laravel optimizations
-# 3. Copy files to deploy folder
-# 4. Deploy to /htdocs/
+recurring:
+  # Directories that are not overwritten or removed by the next deployment
+  excludes:
+    - storage/app/*
+    - storage/logs/*
+    - storage/framework/cache/*
+    - storage/framework/sessions/*
+    - storage/framework/views/*
+    - .env
+    - bootstrap/cache/*.php
 
-# Exclude development files from deployment
-exclude:
-  - .git
-  - .gitignore
-  - .env.example
-  - composer.json
-  - composer.lock
-  - package.json
-  - package-lock.json
-  - node_modules
-  - tests
-  - phpunit.xml
-  - .phpunit.result.cache
-  - storage/logs/*
-  - storage/framework/cache/*
-  - storage/framework/sessions/*
-  - storage/framework/views/*
+# Runtime commands executed on the server
+runtime:
+  # Commands executed before deployment
+  pre-deployment-remote-commands:
+    - echo "Starting maintenance mode"
+    - php8.1-cli artisan down || true
+  
+  # Commands executed after deployment
+  post-deployment-remote-commands:
+    - echo "Clearing caches"
+    - php8.1-cli artisan config:clear || true
+    - php8.1-cli artisan cache:clear || true
+    - php8.1-cli artisan view:clear || true
+    - php8.1-cli artisan route:clear || true
+    - php8.1-cli artisan optimize || true
+    - echo "Running migrations"
+    - php8.1-cli artisan migrate --force || true
+    - echo "Leaving maintenance mode"
+    - php8.1-cli artisan up || true
+    - echo "Deployment complete"
 
-# Keep these files persistent (not overwritten on deployment)
-persistent:
-  - storage/app/*
-  - storage/logs/*
-  - .env
+  # Cron jobs (if needed)
+  cron-jobs:
+    # Example: Run Laravel scheduler every minute
+    # - command: cd $HOME/htdocs && php8.1-cli artisan schedule:run
+    #   schedule: "* * * * *"

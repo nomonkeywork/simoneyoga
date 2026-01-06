@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: ./deploy
+  DEPLOYMENT_FOLDER: ./
 
 jobs:
 # Please do not rename this job
@@ -39,90 +39,26 @@ jobs:
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
       - name: Prepare Laravel for production
+        env:
+          APP_ENV: production
         run: |
-          # Copy .env.example to .env if .env doesn't exist
-          if [ ! -f .env ]; then
-            cp .env.example .env
-          fi
-          
-          # Generate application key if not set
+          # Generate application key if not set (will be overridden by .env.template)
           php artisan key:generate --force || true
           
-          # Clear and cache configuration
-          php artisan config:clear || true
-          php artisan cache:clear || true
-          php artisan view:clear || true
-          php artisan route:clear || true
-
-      - name: Prepare deploy folder
-        run: |
-          # Clean deploy folder
-          rm -rf deploy/*
-          mkdir -p deploy
+          # Optimize Laravel for production
+          php artisan config:cache || true
+          php artisan route:cache || true
+          php artisan view:cache || true
           
-          # Copy Laravel files (excluding development files)
-          rsync -av --exclude='.git' \
-            --exclude='.env.example' \
-            --exclude='composer.json' \
-            --exclude='composer.lock' \
-            --exclude='package.json' \
-            --exclude='package-lock.json' \
-            --exclude='node_modules' \
-            --exclude='tests' \
-            --exclude='phpunit.xml' \
-            --exclude='.phpunit.result.cache' \
-            --exclude='storage/logs/*' \
-            --exclude='storage/framework/cache/*' \
-            --exclude='storage/framework/sessions/*' \
-            --exclude='storage/framework/views/*' \
-            --exclude='frontend' \
-            --exclude='backend' \
-            . deploy/
+          # Ensure storage directories exist with correct permissions
+          mkdir -p storage/logs
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p bootstrap/cache
           
-          # Ensure storage and bootstrap/cache directories exist
-          mkdir -p deploy/storage/logs
-          mkdir -p deploy/storage/framework/cache
-          mkdir -p deploy/storage/framework/sessions
-          mkdir -p deploy/storage/framework/views
-          mkdir -p deploy/bootstrap/cache
-          
-          # Set permissions (will be adjusted on server)
-          chmod -R 775 deploy/storage deploy/bootstrap/cache || true
-          
-          # Ensure .htaccess exists for Laravel
-          if [ ! -f deploy/public/.htaccess ]; then
-            cat > deploy/public/.htaccess << 'EOF'
-          <IfModule mod_rewrite.c>
-              <IfModule mod_negotiation.c>
-                  Options -MultiViews -Indexes
-              </IfModule>
-
-              RewriteEngine On
-
-              # Handle Authorization Header
-              RewriteCond %{HTTP:Authorization} .
-              RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-              # Redirect Trailing Slashes If Not A Folder...
-              RewriteCond %{REQUEST_FILENAME} !-d
-              RewriteCond %{REQUEST_URI} (.+)/$
-              RewriteRule ^ %1 [L,R=301]
-
-              # Send Requests To Front Controller...
-              RewriteCond %{REQUEST_FILENAME} !-d
-              RewriteCond %{REQUEST_FILENAME} !-f
-              RewriteRule ^ index.php [L]
-          </IfModule>
-          EOF
-          fi
-          
-          # Create root .htaccess to redirect to public
-          cat > deploy/.htaccess << 'EOF'
-          <IfModule mod_rewrite.c>
-              RewriteEngine On
-              RewriteRule ^(.*)$ public/$1 [L]
-          </IfModule>
-          EOF
+          # Set permissions
+          chmod -R 775 storage bootstrap/cache || true
 
 # Please do not touch the following action
       - name: Store deployment content
