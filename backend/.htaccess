@@ -1,0 +1,23 @@
+# PHP API .htaccess
+RewriteEngine On
+
+# Set environment variables (if not set in IONOS panel)
+<IfModule mod_env.c>
+    SetEnv DB_HOST db5019339232.hosting-data.io
+    SetEnv DB_NAME dbs15144294
+    SetEnv DB_USER dbu529946
+    SetEnv DB_PASS TivedenYoga_Retreat_2026
+</IfModule>
+
+# Allow CORS for API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
+
+# Route API requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/$1 [L]
+

@@ -1,0 +1,31 @@
+@media (max-width: 768px), (max-width: 1024px) and (orientation: portrait) {
+    span.block {
+        display: inline;
+    }
+
+
+    .split-container {
+        display: block;
+        position: relative;
+    }
+
+    .image-bg:nth-child(1) {
+        display: none;
+    }
+
+    .image-bg:nth-child(2) {
+        width: 90vw;
+    }
+
+    .image-bg:nth-child(3) {
+        display: none;
+    }
+
+    #bg-gradient-container {
+    width: 100dvw;
+    height: 100dvh;
+
+    z-index: 1;
+
+}
+}
