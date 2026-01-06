@@ -2,3 +2,4 @@ SetEnv DB_HOST db5019339232.hosting-data.io
 SetEnv DB_NAME simoneyoga26
 SetEnv DB_USER dbu529946
 SetEnv DB_PASS TivedenYoga_Retreat_2026
+SetEnv GITHUB_TOKEN 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
