@@ -73,3 +73,4 @@ anima/
 - Google Fonts are still loaded from CDN (will use fallback fonts if offline)
 
 
+# simoneyoga
