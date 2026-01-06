@@ -46,6 +46,11 @@ jobs:
           action: update-status
           status: in_progress
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
+
       - name: Retrieve stored deployment
         uses: ionos-deploy-now/artifact-action@v1
         with:
@@ -61,14 +66,24 @@ jobs:
           # Debug: Show current directory structure
           echo "Current directory:"
           pwd
-          echo "Contents of deployment folder:"
+          echo ""
+          echo "Root directory contents:"
+          ls -la
+          echo ""
+          echo "Contents of deployment folder (if exists):"
           ls -la deployment/ 2>/dev/null || echo "deployment folder does not exist"
-
+          echo ""
+          echo "Checking for deployment-info.json in multiple locations:"
+          [ -f deployment/deployment-info.json ] && echo "✅ Found: deployment/deployment-info.json" || echo "❌ Not found: deployment/deployment-info.json"
+          [ -f ./deployment/deployment-info.json ] && echo "✅ Found: ./deployment/deployment-info.json" || echo "❌ Not found: ./deployment/deployment-info.json"
+          [ -f ${{ github.workspace }}/deployment/deployment-info.json ] && echo "✅ Found: ${{ github.workspace }}/deployment/deployment-info.json" || echo "❌ Not found: ${{ github.workspace }}/deployment/deployment-info.json"
+          
           # Ensure deployment folder exists
           mkdir -p deployment
-
+          
           # Create deployment-info.json if it doesn't exist or is empty
           if [ ! -f deployment/deployment-info.json ] || [ ! -s deployment/deployment-info.json ]; then
+            echo ""
             echo "Creating deployment-info.json..."
             cat > deployment/deployment-info.json << 'JSONEOF'
           {
@@ -79,19 +94,22 @@ jobs:
             }
           }
           JSONEOF
-            echo "Created deployment-info.json"
+            echo "✅ Created deployment-info.json"
           else
-            echo "deployment-info.json already exists"
+            echo ""
+            echo "✅ deployment-info.json already exists"
           fi
-
+          
           # Verify the file exists and is valid JSON
+          echo ""
           echo "Verifying deployment-info.json:"
           cat deployment/deployment-info.json
           echo ""
           echo "File size:"
           ls -lh deployment/deployment-info.json
+          echo ""
           echo "JSON validation:"
-          python3 -c "import json; json.load(open('deployment/deployment-info.json')); print('✅ Valid JSON')" || echo "❌ Invalid JSON"
+          python3 -c "import json; data=json.load(open('deployment/deployment-info.json')); print('✅ Valid JSON with version:', data.get('version'))" || echo "❌ Invalid JSON"
 
       - name: Fetch deployment info
         uses: ionos-deploy-now/project-action@v1
