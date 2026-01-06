@@ -35,16 +35,16 @@ recurring:
 runtime:
   pre-deployment-remote-commands:
     - echo "Starting maintenance mode"
-    - php8.1-cli artisan down || true
+    - php8.2-cli artisan down || php8.1-cli artisan down || true
   post-deployment-remote-commands:
     - echo "Clearing caches"
-    - php8.1-cli artisan config:clear || true
-    - php8.1-cli artisan cache:clear || true
-    - php8.1-cli artisan view:clear || true
-    - php8.1-cli artisan route:clear || true
-    - php8.1-cli artisan optimize || true
+    - php8.2-cli artisan config:clear || php8.1-cli artisan config:clear || true
+    - php8.2-cli artisan cache:clear || php8.1-cli artisan cache:clear || true
+    - php8.2-cli artisan view:clear || php8.1-cli artisan view:clear || true
+    - php8.2-cli artisan route:clear || php8.1-cli artisan route:clear || true
+    - php8.2-cli artisan optimize || php8.1-cli artisan optimize || true
     - echo "Running migrations"
-    - php8.1-cli artisan migrate --force || true
+    - php8.2-cli artisan migrate --force || php8.1-cli artisan migrate --force || true
     - echo "Leaving maintenance mode"
-    - php8.1-cli artisan up || true
+    - php8.2-cli artisan up || php8.1-cli artisan up || true
     - echo "Deployment complete"
