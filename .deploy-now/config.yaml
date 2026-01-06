@@ -1,5 +1,6 @@
 # IONOS Deploy Now Configuration
 # https://docs.ionos.space/docs/deployment-configuration/
-
-version: 1
+# 
+# Note: Version field removed - will be set automatically by IONOS Deploy Now
+# when project is recreated with PHP Package template
 

@@ -1,7 +1,8 @@
 # IONOS Deploy Now Configuration for Laravel
 # https://docs.ionos.space/docs/deployment-configuration/
-
-version: 1.0
+#
+# Note: Version field removed - will be set automatically by IONOS Deploy Now
+# when project is recreated with PHP Package template
 
 bootstrap:
   excludes:
