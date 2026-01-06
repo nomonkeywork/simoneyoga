@@ -58,25 +58,40 @@ jobs:
 
       - name: Ensure deployment-info.json exists
         run: |
+          # Debug: Show current directory structure
+          echo "Current directory:"
+          pwd
+          echo "Contents of deployment folder:"
+          ls -la deployment/ 2>/dev/null || echo "deployment folder does not exist"
+          
           # Ensure deployment folder exists
           mkdir -p deployment
           
           # Create deployment-info.json if it doesn't exist or is empty
           if [ ! -f deployment/deployment-info.json ] || [ ! -s deployment/deployment-info.json ]; then
+            echo "Creating deployment-info.json..."
             cat > deployment/deployment-info.json << 'EOF'
-          {
-            "version": 2,
-            "type": "php",
-            "build": {
-              "distFolder": "."
-            }
-          }
-          EOF
+{
+  "version": 2,
+  "type": "php",
+  "build": {
+    "distFolder": "."
+  }
+}
+EOF
             echo "Created deployment-info.json"
           else
             echo "deployment-info.json already exists"
-            cat deployment/deployment-info.json
           fi
+          
+          # Verify the file exists and is valid JSON
+          echo "Verifying deployment-info.json:"
+          cat deployment/deployment-info.json
+          echo ""
+          echo "File size:"
+          ls -lh deployment/deployment-info.json
+          echo "JSON validation:"
+          python3 -c "import json; json.load(open('deployment/deployment-info.json')); print('✅ Valid JSON')" || echo "❌ Invalid JSON"
 
       - name: Fetch deployment info
         uses: ionos-deploy-now/project-action@v1
