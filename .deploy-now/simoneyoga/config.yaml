@@ -1,7 +1,7 @@
 # IONOS Deploy Now Configuration for Laravel
 # https://docs.ionos.space/docs/deployment-configuration/
 
-version: 1
+version: 2
 
 bootstrap:
   excludes:
