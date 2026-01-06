@@ -43,6 +43,7 @@ jobs:
     needs:
       - retrieve-project
       - build
+    if: ${{ needs.build.result == 'success' && needs.retrieve-project.outputs.deployment-enabled == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch deployment(s)
