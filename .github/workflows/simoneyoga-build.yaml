@@ -48,7 +48,8 @@ jobs:
         run: |
           # Update composer.lock to be compatible with PHP 8.2
           # Use --with-all-dependencies to update transitive dependencies
-          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies
+          # Ignore platform requirements to allow downgrading to PHP 8.2-compatible versions
+          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php
           # Then install from updated lock file
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
