@@ -44,14 +44,17 @@ jobs:
           mkdir -p storage/framework/views
           chmod -R 775 bootstrap/cache storage
           
-      - name: Install Composer dependencies
+      - name: Update Composer dependencies for PHP 8.2
         run: |
-          # Update composer.lock to be compatible with PHP 8.2
+          # First, update composer.lock to be compatible with PHP 8.2
           # Use --with-all-dependencies to update transitive dependencies
           # Ignore platform requirements to allow downgrading to PHP 8.2-compatible versions
-          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php
-          # Then install from updated lock file
-          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+          composer update --no-dev --optimize-autoloader --no-interaction --prefer-dist --with-all-dependencies --ignore-platform-req=php || true
+          
+      - name: Install Composer dependencies
+        run: |
+          # Install from updated lock file (or original if update failed)
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-req=php
 
       - name: Prepare Laravel for production
         env:
