@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: ./
+  DEPLOYMENT_FOLDER: ./deployment
 
 jobs:
 # Please do not rename this job
@@ -70,6 +70,32 @@ jobs:
           # Set permissions
           chmod -R 775 storage bootstrap/cache || true
 
+      - name: Prepare deployment folder
+        run: |
+          # Create deployment folder structure
+          mkdir -p deployment
+          
+          # Copy all files to deployment folder (excluding dev files)
+          rsync -av --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='frontend' \
+            --exclude='backend' \
+            --exclude='deploy' \
+            . deployment/
+          
+          # Ensure deployment-info.json exists with correct schema
+          cat > deployment/deployment-info.json << 'EOF'
+          {
+            "version": 2,
+            "type": "php",
+            "build": {
+              "distFolder": "."
+            }
+          }
+          EOF
+
 # Please do not touch the following action
       - name: Store deployment content
         uses: ionos-deploy-now/artifact-action@v1
@@ -79,6 +105,6 @@ jobs:
           project-id: 992c602c-dc50-471b-b840-90b04674003b
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
-          folder: ${{ env.DEPLOYMENT_FOLDER }}
+          folder: deployment
           config-file: .deploy-now/simoneyoga/config.yaml
           action: upload
