@@ -56,6 +56,28 @@ jobs:
           version: ${{ inputs.version }}
           action: download
 
+      - name: Ensure deployment-info.json exists
+        run: |
+          # Ensure deployment folder exists
+          mkdir -p deployment
+          
+          # Create deployment-info.json if it doesn't exist or is empty
+          if [ ! -f deployment/deployment-info.json ] || [ ! -s deployment/deployment-info.json ]; then
+            cat > deployment/deployment-info.json << 'EOF'
+          {
+            "version": 2,
+            "type": "php",
+            "build": {
+              "distFolder": "."
+            }
+          }
+          EOF
+            echo "Created deployment-info.json"
+          else
+            echo "deployment-info.json already exists"
+            cat deployment/deployment-info.json
+          fi
+
       - name: Fetch deployment info
         uses: ionos-deploy-now/project-action@v1
         id: deployment
