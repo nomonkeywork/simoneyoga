@@ -123,6 +123,18 @@ jobs:
       - name: Render SSH user secret name
         run: echo SSH_USERNAME_SECRET=IONOS_DEPLOYMENT_`echo ${{ matrix.deployment-id }} | tr '[:lower:]' '[:upper:]' | tr '-' '_'`_SSH_USERNAME >> $GITHUB_ENV
 
+      - name: Verify deployment-info.json before deploy
+        run: |
+          echo "Checking deployment-info.json before deploy:"
+          if [ -f deployment/deployment-info.json ]; then
+            echo "✅ File exists"
+            cat deployment/deployment-info.json
+            python3 -c "import json; data=json.load(open('deployment/deployment-info.json')); print('✅ Valid JSON with version:', data.get('version'))"
+          else
+            echo "❌ File does not exist!"
+            exit 1
+          fi
+
       - name: Deploy to IONOS
         uses: ionos-deploy-now/deploy-to-ionos-action@v2
         with:
@@ -134,8 +146,6 @@ jobs:
           deployment-folder: deployment
           ssh-user: ${{ secrets[env.SSH_USERNAME_SECRET] }}
           ssh-key: ${{ secrets.IONOS_SSH_KEY }}
-        env:
-          DEPLOYMENT_INFO: ""
 
       - name: Update deployment status
         if: ${{ always() }}
