@@ -101,7 +101,7 @@ jobs:
           # Ensure deployment-info.json exists with correct schema
           cat > deployment/deployment-info.json << 'EOF'
           {
-            "version": 1,
+            "version": 2,
             "type": "php",
             "build": {
               "distFolder": "."
