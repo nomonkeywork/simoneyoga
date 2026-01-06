@@ -34,6 +34,16 @@ jobs:
           extensions: mbstring, xml, bcmath, pdo, pdo_mysql
           coverage: none
 
+      - name: Prepare directories
+        run: |
+          # Create required directories with correct permissions
+          mkdir -p bootstrap/cache
+          mkdir -p storage/logs
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          chmod -R 775 bootstrap/cache storage
+          
       - name: Install Composer dependencies
         run: |
           composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
