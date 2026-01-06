@@ -87,7 +87,7 @@ jobs:
             echo "Creating deployment-info.json..."
             cat > deployment/deployment-info.json << 'JSONEOF'
           {
-            "version": 2,
+            "version": 1,
             "type": "php",
             "build": {
               "distFolder": "."
