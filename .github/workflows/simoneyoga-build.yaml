@@ -56,6 +56,7 @@ jobs:
       - name: Prepare Laravel for production
         env:
           APP_ENV: production
+          APP_URL: ${{ inputs.site-url != 'https://IONOS_DEPLOY_NOW_SITE_URL' && inputs.site-url || 'https://simoneyoga.de' }}
         run: |
           # Generate application key if not set (will be overridden by .env.template)
           php artisan key:generate --force || true
