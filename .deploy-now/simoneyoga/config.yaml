@@ -24,6 +24,8 @@ deploy:
       # Documentation and config files not needed on server
       - "README*.md"
       - "*.md"
+      - "*.png"
+      - "*.mp4"
       - .editorconfig
       - .phpunit.result.cache
       - phpunit.xml
@@ -38,6 +40,7 @@ deploy:
       - .idea
       - .vscode
       - .DS_Store
+      - "*.swp"
       - "*.swp"
       - "*.swo"
       - "*~"
