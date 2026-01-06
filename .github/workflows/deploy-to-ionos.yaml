@@ -134,6 +134,8 @@ jobs:
           deployment-folder: deployment
           ssh-user: ${{ secrets[env.SSH_USERNAME_SECRET] }}
           ssh-key: ${{ secrets.IONOS_SSH_KEY }}
+        env:
+          DEPLOYMENT_INFO: ""
 
       - name: Update deployment status
         if: ${{ always() }}
