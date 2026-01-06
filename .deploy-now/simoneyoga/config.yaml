@@ -11,6 +11,8 @@ deploy:
       - .env.example
       - tests
       - node_modules
+      - vendor
+      - videos
       - frontend
       - backend
       - deploy
